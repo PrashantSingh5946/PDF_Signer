@@ -1,0 +1,65 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.App{
+  background: rgb(92, 92, 92);
+  width: 800px;
+  height: 600px;
+  display: flex;
+  padding: 20px;
+}
+
+.droppables{
+  width: 350px;
+  background-color: rgb(157, 157, 157);
+  /* border-radius: 5px; */
+  display: flex;
+  justify-content: center;
+}
+
+.droppables ul{
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+}
+.droppables li{
+  display: block;
+  padding-left: 10px;
+}
+
+.playground
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+  background-color: rgb(157, 157, 157);
+  /* border-radius: 5px; */
+}
+
+.page{
+  width:320px;
+  height: 480px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+#sign{
+  width: 160px;
+  height: 40px;
+  background-color: #fff;
+}
+
+.credential
+{
+  display: flex;
+  /* justify-content: center; */
+}
+
+.credential .icon {
+  margin-right: 10px;
+}
