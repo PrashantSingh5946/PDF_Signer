@@ -3,12 +3,18 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import { faPenNib,faUnderline,faStamp,faCalendar,faUser,faUserTag,faEnvelope,faBuilding, faBriefcase } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import Sign from './components/Sign'
 function App() {
-  const [count, setCount] = useState(0)
+  const [isSignActive,setIsSignActive] = useState(false);
+  const [coordinates,setCoordinates] = useState({left:0,top:0});
+
+  let hoverHandler = (e) => {
+    console.log(e);
+    setCoordinates({left:e.clientX,top:e.clientY});
+  };
 
   return (
-    <div className="App">
+    <div className="App" >
       <div className='droppables'>
         <div>
           
@@ -119,8 +125,10 @@ function App() {
         </ul>
       </div>
       <div className='playground'>
-        <div className='page'>
+        <div className='page' onMouseMove={hoverHandler} onMouseEnter={()=>setIsSignActive(true)} onMouseLeave={()=>setIsSignActive(false)}>
 
+          {isSignActive && <Sign left={coordinates.left-250} top={coordinates.top-120}/>
+}
         </div>
       </div>
       
