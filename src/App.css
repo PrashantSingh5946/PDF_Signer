@@ -63,3 +63,7 @@
 .credential .icon {
   margin-right: 10px;
 }
+
+.credential:hover{
+  background-color: gray;
+}
