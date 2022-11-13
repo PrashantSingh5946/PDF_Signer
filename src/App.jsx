@@ -18,7 +18,7 @@ function App() {
   };
 
   let pasteHandler = (e) => {
-    console.log(e);
+   // console.log(e);
 
     let rect = document.querySelector("#page").getBoundingClientRect();
 

@@ -41,12 +41,13 @@
   /* border-radius: 5px; */
 }
 
-.page{
+#page{
   width:320px;
   height: 480px;
   background: #fff;
   border-radius: 2px;
   position: relative;
+  overflow: hidden;
 }
 
 .credential
