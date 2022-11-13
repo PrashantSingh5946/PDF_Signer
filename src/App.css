@@ -46,6 +46,7 @@
   height: 480px;
   background: #fff;
   border-radius: 2px;
+  position: relative;
 }
 
 .credential
