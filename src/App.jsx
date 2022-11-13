@@ -1,62 +1,44 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import signImage from "./assets/sign.png"
-import Sign from "./components/Sign";
-import {
-  faPenNib,
-  faUnderline,
-  faStamp,
-  faCalendar,
-  faUser,
-  faUserTag,
-  faEnvelope,
-  faBuilding,
-  faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDrag,useDrop,DragPreviewImage } from "react-dnd";
-
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import './App.css'
+import { faPenNib,faUnderline,faStamp,faCalendar,faUser,faUserTag,faEnvelope,faBuilding, faBriefcase } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Sign from './components/Sign'
 function App() {
-  const [count, setCount] = useState(0);
-  const [{ isDragging }, drag,preview] = useDrag(() => ({
-    type: "signature",
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
+  
+  const [droppables,setDroppables] = useState([]);
+  const [isSignActive,setIsSignActive] = useState(false);
+  const [isSignVisible,setIsSignVisible] = useState(false);
+  const [coordinates,setCoordinates] = useState({left:0,top:0});
 
-  const [{ isOver, canDrop,  }, drop] = useDrop(
-    () => ({
-      accept: "signature",
-      canDrop: () => true,
-      drop: (e) => {console.log(e)},
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-        canDrop: !!monitor.canDrop(),
-      }),
-    }),
-    [],
-  )
+  let hoverHandler = (e) => {
+    //let rect = e.target.getBoundingClientRect();
+    let rect = document.querySelector("#page").getBoundingClientRect();
+    setCoordinates({left:e.clientX-rect.left,top:e.clientY-rect.top});
+  };
 
-  if(isOver)
-  {
-    alert("Signature dropped")
+  let pasteHandler = (e) => {
+   // console.log(e);
+
+    let rect = document.querySelector("#page").getBoundingClientRect();
+
+    isSignActive && setDroppables([...droppables,{name:"signature"+Math.random(),left:e.clientX-rect.left,top:e.clientY-rect.top}])
+    setIsSignActive(false);
+    setIsSignVisible(false);
   }
 
-  
-
   return (
-    <div className="App">
-      <DragPreviewImage connect={preview} src={""} />
-      <div className="droppables">
-        <div></div>
+    <div className="App" >
+      <div className='droppables'>
+        <div>
+          
+        </div>
         <ul>
-          <h2>FIELDS</h2>
-          <hr />
-          <li>
-            <div className="credential" id="sign" ref={drag}>
-              <div className="icon">
+        <h2>FIELDS</h2>
+        <hr/>
+          <li draggable>
+            <div  className='credential' id="sign" onClick={()=>setIsSignActive(true)}>
+              <div className='icon'>
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </div>
               <small>Signature</small>
@@ -143,9 +125,14 @@ function App() {
           </li>
         </ul>
       </div>
-      <div className="playground">
-        <div className="page" ref={drop}>
+      <div className='playground'>
+        <div className='page' id='page' onClick={pasteHandler} onMouseMove={hoverHandler} onMouseEnter={()=>isSignActive && setIsSignVisible(true)} onMouseLeave={()=>setIsSignVisible(false)}>
 
+{
+  droppables.map((droppable)=> <Sign left={droppable.left} top={droppable.top}/>)
+}
+          {isSignActive && isSignVisible && <Sign left={coordinates.left} top={coordinates.top}/>
+}
         </div>
       </div>
     </div>

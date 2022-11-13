@@ -41,27 +41,35 @@
   /* border-radius: 5px; */
 }
 
-.page{
+#page{
   width:320px;
   height: 480px;
   background: #fff;
   border-radius: 2px;
-}
-
-#sign{
-  width: 160px;
-  height: 40px;
-  background-color: #fff;
+  position: relative;
+  overflow: hidden;
 }
 
 .credential
 {
   display: flex;
-  /* justify-content: center; */
+  width: 160px;
+  height: 27px;
+  /* background-color: gray; */
+  padding: 5px;
+  margin: 2px;
+  border-radius: 3px;
+  
+}
+
+.credential:hover{
+  background-color: rgb(234, 234, 234);
+  cursor: pointer;
 }
 
 .credential .icon {
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 .credential:hover{

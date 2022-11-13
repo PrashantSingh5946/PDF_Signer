@@ -1,8 +1,11 @@
 import React from 'react'
-import image from "../assets/sign.png"
+import sign from '../assets/sign.png'
+import "./Sign.css"
 
-export default function Sign() {
+export default function (props) {
   return (
-    <div><img src={image}></img></div>
+    <>
+        <img src={sign} style={{left:parseInt(props.left), top:parseInt(props.top)}}></img>
+    </>
   )
 }
