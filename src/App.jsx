@@ -42,98 +42,85 @@ function App() {
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </div>
               <small>Signature</small>
-
             </div>
           </li>
-          
 
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faUnderline}></FontAwesomeIcon>
               </div>
               <small>Initial</small>
-
             </div>
           </li>
 
-
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faStamp}></FontAwesomeIcon>
               </div>
               <small>Stamp</small>
-
             </div>
           </li>
 
-
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
               </div>
               <small>Date Signed</small>
-
             </div>
           </li>
 
-          <hr/>
+          <hr />
 
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
               </div>
               <small>Name</small>
-
             </div>
           </li>
 
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon>
               </div>
               <small>First name</small>
-
             </div>
           </li>
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
               </div>
               <small>Last name</small>
-
             </div>
           </li>
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
               </div>
               <small>Email</small>
-
             </div>
           </li>
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faBuilding}></FontAwesomeIcon>
               </div>
               <small>Company</small>
-
             </div>
           </li>
           <li>
-            <div  className='credential' id="sign">
-              <div className='icon'>
+            <div className="credential" id="sign">
+              <div className="icon">
                 <FontAwesomeIcon icon={faBriefcase}></FontAwesomeIcon>
               </div>
               <small>Title</small>
-
             </div>
           </li>
         </ul>
@@ -148,9 +135,8 @@ function App() {
 }
         </div>
       </div>
-      
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
