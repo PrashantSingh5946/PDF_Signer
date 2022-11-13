@@ -5,13 +5,20 @@ import { faPenNib,faUnderline,faStamp,faCalendar,faUser,faUserTag,faEnvelope,faB
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Sign from './components/Sign'
 function App() {
+  const [droppables,setDroppables] = useState([]);
   const [isSignActive,setIsSignActive] = useState(false);
+  const [isSignVisible,setIsSignVisible] = useState(false);
   const [coordinates,setCoordinates] = useState({left:0,top:0});
 
   let hoverHandler = (e) => {
-    console.log(e);
     setCoordinates({left:e.clientX,top:e.clientY});
   };
+
+  let pasteHandler = (e) => {
+    console.log(e);
+    setIsSignActive(false);
+    setDroppables([...droppables,{name:"signature"+Math.random(),left:coordinates.left-250,top: coordinates.top-120}])
+  }
 
   return (
     <div className="App" >
@@ -22,8 +29,8 @@ function App() {
         <ul>
         <h2>FIELDS</h2>
         <hr/>
-          <li>
-            <div  className='credential' id="sign">
+          <li draggable>
+            <div  className='credential' id="sign" onClick={()=>setIsSignActive(true)}>
               <div className='icon'>
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </div>
@@ -125,9 +132,12 @@ function App() {
         </ul>
       </div>
       <div className='playground'>
-        <div className='page' onMouseMove={hoverHandler} onMouseEnter={()=>setIsSignActive(true)} onMouseLeave={()=>setIsSignActive(false)}>
+        <div className='page' onClick={pasteHandler} onMouseMove={hoverHandler} onMouseEnter={()=>setIsSignVisible(true)} onMouseLeave={()=>setIsSignVisible(false)}>
 
-          {isSignActive && <Sign left={coordinates.left-250} top={coordinates.top-120}/>
+{
+  droppables.map((droppable)=> <Sign left={droppable.left} top={droppable.top}/>)
+}
+          {isSignActive && isSignVisible && <Sign left={coordinates.left-250} top={coordinates.top-120}/>
 }
         </div>
       </div>
