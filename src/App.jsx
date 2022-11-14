@@ -17,6 +17,15 @@ function App() {
     setCoordinates({left:e.clientX-rect.left,top:e.clientY-rect.top});
   };
 
+  let dropHandler = (e) =>
+  {
+    e.preventDefault();
+    let rect = document.querySelector("#page").getBoundingClientRect();
+    setDroppables([...droppables,{name:"signature"+Math.random(),left:e.clientX-rect.left,top:e.clientY-rect.top}])
+    setIsSignActive(false);
+    setIsSignVisible(false);
+  }
+
   let pasteHandler = (e) => {
    // console.log(e);
 
@@ -37,7 +46,7 @@ function App() {
         <h2>FIELDS</h2>
         <hr/>
           <li >
-            <div  className='credential' draggable id="sign" onClick={()=>setIsSignActive(true)}>
+            <div  className='credential' draggable id="sign"  onClick={()=>setIsSignActive(true)}>
               <div className='icon'>
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </div>
@@ -126,10 +135,10 @@ function App() {
         </ul>
       </div>
       <div className='playground'>
-        <div className='page' id='page' onClick={pasteHandler} onMouseMove={hoverHandler} onMouseEnter={()=>isSignActive && setIsSignVisible(true)} onMouseLeave={()=>setIsSignVisible(false)}>
+        <div className='page' id='page' onClick={pasteHandler} onMouseMove={hoverHandler} onDragOver={(e)=>e.preventDefault()} onDrop={dropHandler} onMouseEnter={()=>isSignActive && setIsSignVisible(true)} onMouseLeave={()=>setIsSignVisible(false)}>
 
 {
-  droppables.map((droppable)=> <Sign left={droppable.left} top={droppable.top}/>)
+  droppables.map((droppable,index)=> <Sign key={index} left={droppable.left} top={droppable.top}/>)
 }
           {isSignActive && isSignVisible && <Sign left={coordinates.left} top={coordinates.top}/>
 }
