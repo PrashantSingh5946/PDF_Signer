@@ -36,8 +36,8 @@ function App() {
         <ul>
         <h2>FIELDS</h2>
         <hr/>
-          <li draggable>
-            <div  className='credential' id="sign" onClick={()=>setIsSignActive(true)}>
+          <li >
+            <div  className='credential' draggable id="sign" onClick={()=>setIsSignActive(true)}>
               <div className='icon'>
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </div>
