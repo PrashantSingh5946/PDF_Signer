@@ -26,14 +26,29 @@ function App() {
   const [file,setFile] = useState();
   const [pageIndex,setPageIndex] = useState(0);
 
+  let downloadPDF = async(name="editedPdf") => {
+    await download(file.file, "Edited", 'application/pdf');
+  }
+
+  const readAsArrayBuffer = (
+    file
+  )=> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
   const pdfRef = createRef();
 
   const pdfDropHandler = async(e) =>
   {
     e.preventDefault();
     e.stopPropagation();
-console.log(e);
-console.log(e.dataTransfer.files);
+// console.log(e);
+// console.log(e.dataTransfer.files);
 let file = e.dataTransfer.files[0];
 let result = null;
     try {
@@ -87,7 +102,7 @@ let result = null;
     },
     {
       name: "PDFLib",
-      src: "https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js",
+      src: "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js",
     },
     {
       name: "download",
@@ -137,8 +152,8 @@ let result = null;
       ...droppables,
       {
         name: "signature" + Math.random(),
-        left: e.clientX - rect.left,
-        top: e.clientY - rect.top,
+        left: 5*(e.clientX - rect.left),
+        top: 5*(e.clientY - rect.top),
       },
     ]);
     setIsSignActive(false);
@@ -278,11 +293,11 @@ let result = null;
             </div>
           </li>
           <li>
-            <div className="credential" id="sign">
+            <div className="credential" onClick={downloadPDF}>
               <div className="icon">
                 <FontAwesomeIcon icon={faBriefcase}></FontAwesomeIcon>
               </div>
-              <small>Title</small>
+              <small>Download</small>
             </div>
           </li>
         </ul>

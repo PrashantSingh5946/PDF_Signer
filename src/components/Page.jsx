@@ -8,9 +8,11 @@ export const Page = ({ page, dimensions, updateDimensions }) => {
   useEffect(() => {
     const renderPage = async (p) => {
       const _page = await p;
+      console.log("Page");
+
       if (_page) {
         const context = canvasRef.current?.getContext('2d');
-        const viewport = _page.getViewport({scale:1});
+        const viewport = _page.getViewport({scale:5});
 
         setWidth(viewport.width);
         setHeight(viewport.height);
@@ -19,6 +21,8 @@ export const Page = ({ page, dimensions, updateDimensions }) => {
           await _page.render({
             canvasContext: canvasRef.current?.getContext('2d'),
             viewport,
+            intent:["print"]
+        
           }).promise;
 
           const newDimensions = {
@@ -34,8 +38,8 @@ export const Page = ({ page, dimensions, updateDimensions }) => {
   }, [page, updateDimensions]);
 
   return (
-    <div>
+    <>
       <canvas ref={canvasRef} width={width} height={height} />
-    </div>
+    </>
   );
 };
