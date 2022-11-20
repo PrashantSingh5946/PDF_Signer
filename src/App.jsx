@@ -28,6 +28,30 @@ function App() {
 
   const pdfRef = createRef();
 
+  const pdfDropHandler = async(e) =>
+  {
+    e.preventDefault();
+    e.stopPropagation();
+console.log(e);
+console.log(e.dataTransfer.files);
+let file = e.dataTransfer.files[0];
+let result = null;
+    try {
+      const pdf = await readAsPDF(file);
+      result = {
+        file,
+        name: file.name,
+        pages: Array(pdf.numPages)
+          .fill(0)
+          .map((_, index) => pdf.getPage(index + 1)),
+      };
+      console.log(result);
+      setFile(result);
+      setIsFileUploaded(true);
+    } catch (error) {
+      console.log("Failed to load pdf", error);
+    }
+  }
   useEffect(() => {
     prepareAssets();
   }, []);
@@ -263,7 +287,9 @@ function App() {
           </li>
         </ul>
       </div>
-      <div
+     <div className="playground" id="playground" onDragOver={(e) => e.preventDefault()}
+          onDrop={pdfDropHandler}>
+     <div
           className="page"
           id="page"
           style={{width:pageDimensions.width,height:pageDimensions.height}}
@@ -285,6 +311,7 @@ function App() {
             isFileUploaded && <Page updateDimensions={setPageDimensions} page={file.pages[pageIndex]} ></Page>
           }
         </div>
+     </div>
     </div>
   );
 }
