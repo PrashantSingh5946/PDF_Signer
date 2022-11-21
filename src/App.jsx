@@ -22,17 +22,56 @@ function App() {
   const [coordinates, setCoordinates] = useState({ left: 0, top: 0 });
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [isFileUploading, setIsFileUploading] = useState(false);
-  const [pageDimensions,setPageDimensions]= useState({width:0,height:0})
-  const [file,setFile] = useState();
-  const [pageIndex,setPageIndex] = useState(0);
+  const [pageDimensions, setPageDimensions] = useState({ width: 0, height: 0 });
+  const [file, setFile] = useState();
+  const [pageIndex, setPageIndex] = useState(0);
 
-  let downloadPDF = async(name="editedPdf") => {
-    await download(file.file, "Edited", 'application/pdf');
-  }
+  let downloadPDF = async (name = "editedPdf") => {
+    await download(file.file, "Edited.pdf", "application/pdf");
+  };
 
-  const readAsArrayBuffer = (
-    file
-  )=> {
+  let saveChanges = async () => {
+    let pdfDoc = await PDFLib.PDFDocument.load(
+      await readAsArrayBuffer(file.file)
+    );
+    let pages = pdfDoc.getPages();
+    let page1 = pages[pageIndex];
+
+    //let img = pdfDoc.embedPng((await readAsArrayBuffer(await readAsImage("sign.png")))) //accepts blob
+    // page1.drawImage(img,{
+    //   x:400,
+    //   y:400,
+    //   width:200,
+    //   height:50,
+    // })
+
+    const pngImageBytes = await fetch("sign.png").then((res) =>
+      res.arrayBuffer()
+    );
+    const pngImage = await pdfDoc.embedPng(pngImageBytes);
+    await page1.drawImage(pngImage, {
+      x: 0,
+      y: 0,
+      width: 196,
+      height: 50,
+    });
+    let newFile = await pdfDoc.save();
+
+    // console.log("NewFile",newFile)
+    // setFile({...file,file:newFile});
+
+    const pdf = await readAsPDF(newFile);
+    let result = {
+      file: new Blob([newFile]),
+      name: file.name,
+      pages: Array(pdf.numPages)
+        .fill(0)
+        .map((_, index) => pdf.getPage(index + 1)),
+    };
+    setFile(result);
+  };
+
+  const readAsArrayBuffer = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
@@ -43,14 +82,13 @@ function App() {
 
   const pdfRef = createRef();
 
-  const pdfDropHandler = async(e) =>
-  {
+  const pdfDropHandler = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-// console.log(e);
-// console.log(e.dataTransfer.files);
-let file = e.dataTransfer.files[0];
-let result = null;
+    // console.log(e);
+    // console.log(e.dataTransfer.files);
+    let file = e.dataTransfer.files[0];
+    let result = null;
     try {
       const pdf = await readAsPDF(file);
       result = {
@@ -60,19 +98,17 @@ let result = null;
           .fill(0)
           .map((_, index) => pdf.getPage(index + 1)),
       };
-      console.log(result);
       setFile(result);
       setIsFileUploaded(true);
     } catch (error) {
       console.log("Failed to load pdf", error);
     }
-  }
+  };
   useEffect(() => {
     prepareAssets();
   }, []);
 
   let afterUpload = async (e) => {
-    console.log(e);
     let file = e.target.files[0];
     let result = null;
     try {
@@ -84,7 +120,6 @@ let result = null;
           .fill(0)
           .map((_, index) => pdf.getPage(index + 1)),
       };
-      console.log(result);
       setFile(result);
       setIsFileUploaded(true);
     } catch (error) {
@@ -130,7 +165,6 @@ let result = null;
         script.src = src;
         script.onload = () => {
           resolve(window[name]);
-          console.log(`${name} is loaded.`);
         };
         script.onerror = () =>
           reject(`The script ${name} didn't load correctly.`);
@@ -152,8 +186,8 @@ let result = null;
       ...droppables,
       {
         name: "signature" + Math.random(),
-        left: 5*(e.clientX - rect.left),
-        top: 5*(e.clientY - rect.top),
+        left: 5 * (e.clientX - rect.left),
+        top: 5 * (e.clientY - rect.top),
       },
     ]);
     setIsSignActive(false);
@@ -188,7 +222,7 @@ let result = null;
         accept="application/pdf"
         onChange={(e) => afterUpload(e)}
         onClick={(e) => {
-          console.log(e);
+          //console.log(e);
         }}
         style={{ display: "none" }}
       />
@@ -232,7 +266,13 @@ let result = null;
           </li>
 
           <li>
-            <div className="credential" onClick={()=>{setPageIndex(pageIndex+1)}} id="sign">
+            <div
+              className="credential"
+              onClick={() => {
+                setPageIndex(pageIndex + 1);
+              }}
+              id="sign"
+            >
               <div className="icon">
                 <FontAwesomeIcon icon={faStamp}></FontAwesomeIcon>
               </div>
@@ -285,11 +325,11 @@ let result = null;
             </div>
           </li>
           <li>
-            <div className="credential" id="sign">
+            <div className="credential" onClick={saveChanges}>
               <div className="icon">
                 <FontAwesomeIcon icon={faBuilding}></FontAwesomeIcon>
               </div>
-              <small>Company</small>
+              <small>Save</small>
             </div>
           </li>
           <li>
@@ -302,12 +342,16 @@ let result = null;
           </li>
         </ul>
       </div>
-     <div className="playground" id="playground" onDragOver={(e) => e.preventDefault()}
-          onDrop={pdfDropHandler}>
-     <div
+      <div
+        className="playground"
+        id="playground"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={pdfDropHandler}
+      >
+        <div
           className="page"
           id="page"
-          style={{width:pageDimensions.width,height:pageDimensions.height}}
+          style={{ width: pageDimensions.width, height: pageDimensions.height }}
           onClick={pasteHandler}
           onMouseMove={hoverHandler}
           onDragOver={(e) => e.preventDefault()}
@@ -322,11 +366,14 @@ let result = null;
             <Sign left={coordinates.left} top={coordinates.top} />
           )}
 
-          {
-            isFileUploaded && <Page updateDimensions={setPageDimensions} page={file.pages[pageIndex]} ></Page>
-          }
+          {isFileUploaded && (
+            <Page
+              updateDimensions={setPageDimensions}
+              page={file.pages[pageIndex]}
+            ></Page>
+          )}
         </div>
-     </div>
+      </div>
     </div>
   );
 }
