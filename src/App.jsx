@@ -30,30 +30,22 @@ function App() {
     await download(file.file, "Edited.pdf", "application/pdf");
   };
 
-  let saveChanges = async () => {
+  let saveChanges = async (x=0,y=0) => {
     let pdfDoc = await PDFLib.PDFDocument.load(
       await readAsArrayBuffer(file.file)
     );
     let pages = pdfDoc.getPages();
     let page1 = pages[pageIndex];
 
-    //let img = pdfDoc.embedPng((await readAsArrayBuffer(await readAsImage("sign.png")))) //accepts blob
-    // page1.drawImage(img,{
-    //   x:400,
-    //   y:400,
-    //   width:200,
-    //   height:50,
-    // })
-
     const pngImageBytes = await fetch("sign.png").then((res) =>
       res.arrayBuffer()
     );
     const pngImage = await pdfDoc.embedPng(pngImageBytes);
     await page1.drawImage(pngImage, {
-      x: 0,
-      y: 0,
-      width: 196,
-      height: 50,
+      x: Math.abs(x),
+      y: pageDimensions.height/5-(y+23.5),
+      width: 127,
+      height: 47,
     });
     let newFile = await pdfDoc.save();
 
@@ -182,14 +174,16 @@ function App() {
   let dropHandler = (e) => {
     e.preventDefault();
     let rect = document.querySelector("#page").getBoundingClientRect();
-    setDroppables([
-      ...droppables,
-      {
-        name: "signature" + Math.random(),
-        left: 5 * (e.clientX - rect.left),
-        top: 5 * (e.clientY - rect.top),
-      },
-    ]);
+    // setDroppables([
+    //   ...droppables,
+    //   {
+    //     name: "signature" + Math.random(),
+    //     left: 5 * (e.clientX - rect.left),
+    //     top: 5 * (e.clientY - rect.top),
+    //   },
+    // ]);
+console.log("X:"+(e.clientX - rect.left)+" "+"Y:"+(e.clientY - rect.top))
+    saveChanges((e.clientX - rect.left),(e.clientY - rect.top))
     setIsSignActive(false);
     setIsSignVisible(false);
   };
@@ -199,15 +193,15 @@ function App() {
 
     let rect = document.querySelector("#page").getBoundingClientRect();
 
-    isSignActive &&
-      setDroppables([
-        ...droppables,
-        {
-          name: "signature" + Math.random(),
-          left: e.clientX - rect.left,
-          top: e.clientY - rect.top,
-        },
-      ]);
+    isSignActive && saveChanges((e.clientX - rect.left),(e.clientY - rect.top))
+      // setDroppables([
+      //   ...droppables,
+      //   {
+      //     name: "signature" + Math.random(),
+      //     left: 5*(e.clientX - rect.left),
+      //     top: 5*(e.clientY - rect.top),
+      //   },
+      // ]);
     setIsSignActive(false);
     setIsSignVisible(false);
   };
@@ -363,7 +357,7 @@ function App() {
             <Sign key={index} left={droppable.left} top={droppable.top} />
           ))}
           {isSignActive && isSignVisible && (
-            <Sign left={coordinates.left} top={coordinates.top} />
+            <Sign left={5*coordinates.left} top={5*coordinates.top} />
           )}
 
           {isFileUploaded && (
