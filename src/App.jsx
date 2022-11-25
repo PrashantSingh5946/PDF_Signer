@@ -27,7 +27,7 @@ function App() {
   const [pageIndex, setPageIndex] = useState(0);
 
   let downloadPDF = async (name = "editedPdf") => {
-    await download(file.file, "Edited.pdf", "application/pdf");
+    await download(file.file, name, "application/pdf");
   };
 
   let saveChanges = async (x=0,y=0) => {
